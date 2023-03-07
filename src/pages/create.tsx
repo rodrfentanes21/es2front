@@ -18,9 +18,9 @@ export default function create() {
     // Or you can work with it as a plain object:
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
-    setDisplay(formJson.var1.toString());
-    setDisplay2(formJson.var2.toString());
-    setDisplay3(formJson.var3.toString());
+    setDisplay(formJson.nome.toString());
+    setDisplay2(formJson.telefone.toString());
+    setDisplay3(formJson.endereco.toString());
 
     // You can pass formData as a fetch body directly:
     // fetch('/some-api', { method: form.method, body: formJson });
@@ -43,20 +43,20 @@ export default function create() {
           <h1 className="text-2xl">Criar</h1>
           <input
             type="text"
-            name="var1"
+            name="nome"
             placeholder="nome"
             className="border text-center w-96 rounded-full"
             required
           ></input>
           <input
             type="text"
-            name="var2"
+            name="telefone"
             placeholder="nao sei mais oq"
             className="border text-center w-96 rounded-full"
           ></input>
           <input
             type="text"
-            name="var3"
+            name="endereco"
             placeholder="nao sei mais oq parte 2"
             className="border text-center w-96 rounded-full"
           ></input>
@@ -70,10 +70,10 @@ export default function create() {
           <div className="">
             nome: {display}
             <br />
-            var2: {display2}
+            telefone: {display2}
             <br />
-            var3: {display3}
-            <br />
+            endereço: {display3}
+            <br />  
             adicionado com sucesso.
           </div>
         ) : (
