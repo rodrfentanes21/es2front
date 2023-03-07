@@ -15,7 +15,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="w-full lg:w-screen h-screen flex flex-col">
-        <h1 className="text-4xl text-center uppercase pt-5">Trabalho Eng Software 2 - Rodrigo</h1>
+        <h1 className="text-4xl text-center uppercase pt-5">Trabalho Eng Software 2 - Rodrigo e Henrique</h1>
         <div className="grow flex flex-col justify-center gap-5 items-center align-middle">
           <Link href="/create" className="w-32 bg-sky-400 hover:bg-sky-700 rounded-full text-white text-xl text-center">
             Criar
