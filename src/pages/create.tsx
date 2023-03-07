@@ -1,21 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 export default function create() {
-  function handleSubmit(e :any) {
+  const [display, setDisplay] = useState("");
+  const [display2, setDisplay2] = useState("");
+  const [display3, setDisplay3] = useState("");
+
+  function handleSubmit(e: any) {
     // Prevent the browser from reloading the page
     e.preventDefault();
 
     // Read the form data
     const form = e.target;
     const formData = new FormData(form);
-
-    // You can pass formData as a fetch body directly:
-    // fetch('/some-api', { method: form.method, body: formData });
+    console.log(formData);
 
     // Or you can work with it as a plain object:
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
+    setDisplay(formJson.var1.toString());
+    setDisplay2(formJson.var2.toString());
+    setDisplay3(formJson.var3.toString());
+
+    // You can pass formData as a fetch body directly:
+    // fetch('/some-api', { method: form.method, body: formJson });
   }
 
   return (
@@ -27,22 +35,27 @@ export default function create() {
         Voltar
       </Link>
       <section className=" flex flex-col justify-center items-center gap-2 w-full lg:w-screen h-screen">
-        <form method="post" onSubmit={handleSubmit} className="flex flex-col justify-start items-center gap-2 w-1/2 aspect-[2/1] py-10 border rounded-xl self-center">
+        <form
+          method="post"
+          onSubmit={handleSubmit}
+          className="flex flex-col justify-start items-center gap-2 w-1/2 aspect-[2/1] py-10 border rounded-xl self-center"
+        >
           <h1 className="text-2xl">Criar</h1>
           <input
-            type="name"
+            type="text"
             name="var1"
             placeholder="nome"
             className="border text-center w-96 rounded-full"
+            required
           ></input>
           <input
-            type="name"
+            type="text"
             name="var2"
             placeholder="nao sei mais oq"
             className="border text-center w-96 rounded-full"
           ></input>
           <input
-            type="name"
+            type="text"
             name="var3"
             placeholder="nao sei mais oq parte 2"
             className="border text-center w-96 rounded-full"
@@ -53,9 +66,19 @@ export default function create() {
             className="w-32 bg-blue-400 hover:bg-sky-700 rounded-full text-white text-center"
           />
         </form>
-        <div className="">
-          provavelmente o retorno ou display dos dados aqui sla
-        </div>
+        {display ? (
+          <div className="">
+            nome: {display}
+            <br />
+            var2: {display2}
+            <br />
+            var3: {display3}
+            <br />
+            adicionado com sucesso.
+          </div>
+        ) : (
+          ""
+        )}
       </section>
     </div>
   );
