@@ -21,14 +21,14 @@ export default function Home() {
             Criar
           </Link>
           <Link href="/read" className="w-32 bg-sky-400 hover:bg-sky-700 rounded-full text-white text-xl text-center select-none">
-            Ler
+            Ler & deletar
           </Link>
           <Link href="/update" className="w-32 bg-sky-400 hover:bg-sky-700 rounded-full text-white text-xl text-center select-none">
             Atualizar
           </Link>
-          <Link href="/delete" className="w-32 bg-sky-400 hover:bg-sky-700 rounded-full text-white text-xl text-center select-none">
+          {/* <Link href="/delete" className="w-32 bg-sky-400 hover:bg-sky-700 rounded-full text-white text-xl text-center select-none">
             Deletar
-          </Link>
+          </Link> */}
         </div>
       </main>
     </>

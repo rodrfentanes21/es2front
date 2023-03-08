@@ -1,84 +1,144 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-export default function create() {
-  const [display, setDisplay] = useState("");
-  const [display2, setDisplay2] = useState("");
-  const [display3, setDisplay3] = useState("");
+type FormData = {
+  name: string;
+  endereco: string;
+  telefone: string;
+};
 
-  function handleSubmit(e: any) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
+export async function getServerSideProps() {
+  async function fetchData() {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form);
-    console.log(formData);
+    var raw = "";
 
-    // Or you can work with it as a plain object:
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
-    setDisplay(formJson.nome.toString());
-    setDisplay2(formJson.telefone.toString());
-    setDisplay3(formJson.endereco.toString());
+    var requestOptions: RequestInit = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+      mode: "no-cors",
+    };
 
-    // You can pass formData as a fetch body directly:
-    // fetch('/some-api', { method: form.method, body: formJson });
+    return fetch("http://localhost:8080/contatos", requestOptions).then(
+      (response) => response.text()
+    );
   }
+  const data = await fetchData();
+
+  return {
+    props: { data }, // will be passed to the page component as props
+  };
+}
+
+export default function create(props: { data: any }) {
+  const data = JSON.parse(props.data);
+
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    endereco: "",
+    telefone: "",
+  });
+  const [submitState, setSubmitState] = useState(false);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitState(true);
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      name: formData.name,
+      telefone: formData.endereco,
+      endereco: formData.telefone,
+    });
+
+    var requestOptions: RequestInit = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/contatos", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+
+    window.location.reload();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
-    <div className="w-full lg:w-screen h-screen flex justify-center items-start">
+    <div className="w-full lg:w-screen flex justify-center items-start">
       <Link
         href="/"
         className="w-20 bg-blue-400 hover:bg-sky-700 rounded-full text-white text-xl text-center absolute top-2 left-2"
       >
         Voltar
       </Link>
-      <section className=" flex flex-col justify-center items-center gap-2 w-full lg:w-screen h-screen">
+      <section className=" flex flex-col justify-center items-center gap-2 w-full lg:w-screen">
         <form
-          method="post"
           onSubmit={handleSubmit}
-          className="flex flex-col justify-start items-center gap-2 w-1/2 aspect-[2/1] py-10 border rounded-xl self-center"
+          className="flex flex-col justify-start items-center gap-2 w-1/2 aspect-[2/1] py-10 mt-10 border rounded-xl self-center"
         >
           <h1 className="text-2xl">Criar</h1>
           <input
             type="text"
-            name="nome"
+            name="name"
+            onChange={handleChange}
+            value={formData.name}
             placeholder="nome"
             className="border text-center w-96 rounded-full"
             required
-          ></input>
-          <input
-            type="text"
-            name="telefone"
-            placeholder="nao sei mais oq"
-            className="border text-center w-96 rounded-full"
-          ></input>
+          />
+
           <input
             type="text"
             name="endereco"
-            placeholder="nao sei mais oq parte 2"
+            onChange={handleChange}
+            value={formData.endereco}
+            placeholder="endereço"
             className="border text-center w-96 rounded-full"
-          ></input>
-          <input
-            type="submit"
-            value="Submit"
-            className="w-32 bg-blue-400 hover:bg-sky-700 rounded-full text-white text-center"
+            required
           />
+
+          <input
+            type="text"
+            name="telefone"
+            onChange={handleChange}
+            value={formData.telefone}
+            placeholder="telefone"
+            className="border text-center w-96 rounded-full"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-20 bg-blue-400 hover:bg-sky-700 rounded-full text-white text-xl text-center"
+          >
+            Submit
+          </button>
         </form>
-        {display ? (
-          <div className="">
-            nome: {display}
-            <br />
-            telefone: {display2}
-            <br />
-            endereço: {display3}
-            <br />  
-            adicionado com sucesso.
-          </div>
-        ) : (
-          ""
-        )}
+        <div className="">
+          <h2>Lista de contatos: </h2>
+          {data.map((user: any, index: number) => (
+            <ul key={index}>
+              <li>id: {user.id}</li>
+              <li>nome: {user.name}</li>
+              <li>endereco: {user.endereco}</li>
+              <li>telefone: {user.telefone}</li>
+              <hr />
+            </ul>
+          ))}
+        </div>
       </section>
     </div>
   );
